@@ -100,5 +100,5 @@ Both scripts will:
 ### License
 This project is intended for academic and research purposes. The PhishFuzzer dataset is subject to its own licensing terms as defined by its original authors (DataPhish). The code in this repository is provided as-is for educational use.
 
-### Contributin
+### Contribution
 Pull requests and suggestions for optimizing low-VRAM inference, fine-tuning Laya for phishing detection, or testing alternative quantized models (e.g., Phi-3 Mini, Gemma 2B) are highly welcome. Please open an issue to discuss potential improvements.
