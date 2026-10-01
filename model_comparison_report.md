@@ -2,7 +2,7 @@
 
 Generated: 2026-10-01 15:02 UTC
 
-Local machine: Windows 11 | Intel64 Family 6 Model 158 Stepping 10, GenuineIntel | Python 3.14.2 | Host: DESKTOP-N7U823O
+Local machine: Windows 11 | Intel64 Family 6 Model 158 Stepping 10, GenuineIntel | Python 3.14.2 
 
 Emails evaluated: 15 (same PhishFuzzer sample across all models)
 
