@@ -52,6 +52,17 @@ def summarize(rows):
     }
 
 
+def confusion_matrix(rows):
+    """Per ground-truth class: counts of what the model actually predicted."""
+    matrix = {}
+    for r in rows.values():
+        truth = r["ground_truth"]
+        pred = r["prediction"]
+        matrix.setdefault(truth, {}).setdefault(pred, 0)
+        matrix[truth][pred] += 1
+    return matrix
+
+
 def main():
     run_rows = {run["key"]: load_run(run["csv"]) for run in RUNS}
     all_indexes = sorted(set().union(*(rows.keys() for rows in run_rows.values())))
@@ -79,6 +90,8 @@ def main():
             writer.writerow(out_row)
 
     summaries = {run["key"]: summarize(run_rows[run["key"]]) for run in RUNS}
+    confusions = {run["key"]: confusion_matrix(run_rows[run["key"]]) for run in RUNS}
+    classes = sorted({r["ground_truth"] for rows in run_rows.values() for r in rows.values()})
 
     # Markdown summary report
     report_path = "model_comparison_report.md"
@@ -99,6 +112,21 @@ def main():
                 f"| {run['label']} | {run['device']} | {s['accuracy']:.2f}% | {s['matches']}/{s['total']} | "
                 f"{s['avg_latency_ms']:.1f} ms | {s['min_latency_ms']:.1f} ms | {s['max_latency_ms']:.1f} ms |\n"
             )
+
+        f.write("\n## Per-Class Recall (Confusion Matrix)\n\n")
+        f.write("| Model | Class | Recall | Correct/Total | Most Common Confusion |\n")
+        f.write("|---|---|---|---|---|\n")
+        for run in RUNS:
+            matrix = confusions[run["key"]]
+            for cls in classes:
+                preds = matrix.get(cls, {})
+                total = sum(preds.values())
+                correct = preds.get(cls, 0)
+                recall = (correct / total * 100) if total else 0.0
+                wrong_preds = {p: c for p, c in preds.items() if p != cls}
+                top_wrong = max(wrong_preds.items(), key=lambda kv: kv[1]) if wrong_preds else None
+                confusion_text = f"{top_wrong[0]} ({top_wrong[1]})" if top_wrong else "-"
+                f.write(f"| {run['label']} | {cls} | {recall:.1f}% | {correct}/{total} | {confusion_text} |\n")
 
         f.write("\n## Per-Email Predictions\n\n")
         f.write("| # | Ground Truth | " + " | ".join(run["label"] for run in RUNS) + " |\n")

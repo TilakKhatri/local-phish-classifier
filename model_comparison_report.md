@@ -1,6 +1,6 @@
 # PhishFuzzer Model Comparison
 
-Generated: 2026-10-03 03:03 UTC
+Generated: 2026-10-03 03:17 UTC
 
 Local machine: Linux 6.6.114.1-microsoft-standard-WSL2 | x86_64 | Python 3.12.3 | Host: DESKTOP-N7U823O
 
@@ -13,6 +13,20 @@ Emails evaluated: 300 (same PhishFuzzer sample across all models)
 | Laya (typed-decisions) | Local GPU (CUDA, 4GB VRAM laptop) | 52.33% | 157/300 | 1577.1 ms | 42.8 ms | 8175.9 ms |
 | Qwen2.5:1.5b (Ollama) | Local GPU (CUDA, 4GB VRAM laptop, quantized) | 45.15% | 135/299 | 2185.1 ms | 205.7 ms | 263369.6 ms |
 | Jev-latest (TypeSafe.ai API) | Cloud API (TypeSafe.ai) | 82.33% | 247/300 | 551.8 ms | -157.4 ms | 19523.8 ms |
+
+## Per-Class Recall (Confusion Matrix)
+
+| Model | Class | Recall | Correct/Total | Most Common Confusion |
+|---|---|---|---|---|
+| Laya (typed-decisions) | Phishing | 35.0% | 35/100 | Valid (46) |
+| Laya (typed-decisions) | Spam | 31.0% | 31/100 | Valid (54) |
+| Laya (typed-decisions) | Valid | 91.0% | 91/100 | Phishing (5) |
+| Qwen2.5:1.5b (Ollama) | Phishing | 99.0% | 99/100 | Valid (1) |
+| Qwen2.5:1.5b (Ollama) | Spam | 32.3% | 32/99 | Phishing (66) |
+| Qwen2.5:1.5b (Ollama) | Valid | 4.0% | 4/100 | Phishing (72) |
+| Jev-latest (TypeSafe.ai API) | Phishing | 97.0% | 97/100 | Valid (3) |
+| Jev-latest (TypeSafe.ai API) | Spam | 57.0% | 57/100 | Valid (39) |
+| Jev-latest (TypeSafe.ai API) | Valid | 93.0% | 93/100 | Spam (7) |
 
 ## Per-Email Predictions
 

@@ -53,12 +53,21 @@ for index, email in enumerate(test_datasets):
     
     start_time = time.time()
     raw_response = None
+    result = None
+    max_attempts = 2
     try:
-        response = requests.post(OLLAMA_URL, json=payload)
-        response.raise_for_status()
-        
-        raw_response = response.json()["response"]
-        result = json.loads(raw_response)
+        for attempt in range(1, max_attempts + 1):
+            try:
+                response = requests.post(OLLAMA_URL, json=payload, timeout=30)
+                response.raise_for_status()
+                raw_response = response.json()["response"]
+                result = json.loads(raw_response)
+                break
+            except (requests.exceptions.RequestException, json.JSONDecodeError):
+                if attempt == max_attempts:
+                    raise
+                logging.warning(f"   Retry {attempt}/{max_attempts - 1} on email {index+1} after request failure...")
+        assert result is not None
         latency = (time.time() - start_time) * 1000
         
         type_pred = result.get("predicted_type", "Unknown").strip()
@@ -95,6 +104,13 @@ for index, email in enumerate(test_datasets):
         })
     except Exception as e:
         logging.error(f" Unexpected Error on email {index+1}: {e}")
+        results_log.append({
+            "email_index": index + 1,
+            "ground_truth": ground_truth,
+            "prediction": "ERROR",
+            "latency_ms": round((time.time() - start_time) * 1000, 2),
+            "status": "Error"
+        })
 
 logging.info("-" * 70)
 final_acc = (correct_count / total_processed) * 100 if total_processed > 0 else 0
