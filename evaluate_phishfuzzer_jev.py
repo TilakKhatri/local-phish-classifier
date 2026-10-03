@@ -22,11 +22,9 @@ headers = {
     "Content-Type": "application/json",
 }
 
-logging.info("📂 Loading PhishFuzzer dataset...")
-with open("./data/PhishFuzzer_emails_original_seed_v1.json", "r", encoding="utf-8") as f:
-    dataset = json.load(f)
-
-test_datasets = dataset[1385:1400]
+logging.info("📂 Loading PhishFuzzer sample dataset...")
+with open("./data/phishfuzzer_sample_300.json", "r", encoding="utf-8") as f:
+    test_datasets = json.load(f)
 
 # SYSTEMONE SCHEMA: Short, distinct criteria work best for the token-scoring head
 questions = {

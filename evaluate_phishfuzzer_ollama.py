@@ -9,11 +9,9 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:1.5b"
 
-logging.info("📂 Loading PhishFuzzer dataset...")
-with open("./data/PhishFuzzer_emails_original_seed_v1.json", "r", encoding="utf-8") as f:
-    dataset = json.load(f)
-
-test_datasets = dataset[1385:1400] 
+logging.info("📂 Loading PhishFuzzer sample dataset...")
+with open("./data/phishfuzzer_sample_300.json", "r", encoding="utf-8") as f:
+    test_datasets = json.load(f)
 
 system_prompt = """You are an expert cybersecurity email classifier. 
 Analyze the email and classify it into EXACTLY ONE category.
